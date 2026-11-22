@@ -93,6 +93,17 @@ export default function Navbar() {
               <Search className="w-3.5 h-3.5" />
               <span>Track Ticket</span>
             </Link>
+            <Link
+  to="/about"
+  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+    isActive('/about')
+      ? 'bg-emerald-50 text-emerald-700'
+      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+  }`}
+>
+  <Building2 className="w-3.5 h-3.5" />
+  <span>About</span>
+</Link>
 
             {isAuthenticated && (
               <Link
@@ -238,6 +249,13 @@ export default function Navbar() {
           >
             Track Issue by ID
           </Link>
+          <Link
+  to="/about"
+  onClick={() => setMobileMenuOpen(false)}
+  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg"
+>
+  About CivicFix
+</Link>
           {isAuthenticated && (
             <Link
               to="/my-complaints"

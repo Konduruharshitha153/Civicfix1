@@ -15,6 +15,7 @@ import HotspotsAnalyticsPage from './pages/HotspotsAnalyticsPage';
 import MyComplaintsPage from './pages/MyComplaintsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
                 <Route path="/hotspots" element={<HotspotsAnalyticsPage />} />
                 <Route path="/admin" element={<AdminDashboardPage />} />
                 <Route path="/my-complaints" element={<MyComplaintsPage />} />
+                <Route path="/about" element={<AboutPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
