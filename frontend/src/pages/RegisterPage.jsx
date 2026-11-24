@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UserPlus, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function RegisterPage() {
@@ -18,6 +19,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       await register({
         full_name: fullName,
@@ -26,9 +28,25 @@ export default function RegisterPage() {
         password,
         role: 'citizen',
       });
+
       navigate('/my-complaints');
+
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Email may already be in use.');
+      console.error("Registration Error:", err);
+
+      if (err.response) {
+        setError(
+          err.response.data?.error ||
+          `Registration failed. Server status: ${err.response.status}`
+        );
+      } else if (err.request) {
+        setError(
+          "Cannot connect to the server. Please check whether the backend is running."
+        );
+      } else {
+        setError(err.message || "Something went wrong during registration.");
+      }
+
     } finally {
       setLoading(false);
     }
@@ -36,15 +54,17 @@ export default function RegisterPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-16 space-y-6">
-      
+
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="w-12 h-12 bg-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-white shadow-md shadow-emerald-600/30">
           <UserPlus className="w-6 h-6" />
         </div>
+
         <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
           Create Citizen Account
         </h1>
+
         <p className="text-xs text-slate-500">
           Join your neighbors in reporting and tracking civic improvements.
         </p>
@@ -58,11 +78,15 @@ export default function RegisterPage() {
       )}
 
       {/* Register Form */}
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4"
+      >
         <div>
           <label className="block text-xs font-bold text-slate-700 mb-1">
             Full Name <span className="text-red-500">*</span>
           </label>
+
           <input
             type="text"
             value={fullName}
@@ -77,6 +101,7 @@ export default function RegisterPage() {
           <label className="block text-xs font-bold text-slate-700 mb-1">
             Email Address <span className="text-red-500">*</span>
           </label>
+
           <input
             type="email"
             value={email}
@@ -91,6 +116,7 @@ export default function RegisterPage() {
           <label className="block text-xs font-bold text-slate-700 mb-1">
             Mobile Number (Optional)
           </label>
+
           <input
             type="tel"
             value={phone}
@@ -104,6 +130,7 @@ export default function RegisterPage() {
           <label className="block text-xs font-bold text-slate-700 mb-1">
             Password <span className="text-red-500">*</span>
           </label>
+
           <input
             type="password"
             value={password}
@@ -126,7 +153,10 @@ export default function RegisterPage() {
 
       <div className="text-center text-xs text-slate-500">
         Already have an account?{' '}
-        <Link to="/login" className="text-emerald-600 font-bold hover:underline">
+        <Link
+          to="/login"
+          className="text-emerald-600 font-bold hover:underline"
+        >
           Sign In
         </Link>
       </div>

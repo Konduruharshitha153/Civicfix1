@@ -16,10 +16,17 @@ def register():
     role = data.get("role", "citizen")
 
     if not email or not password or not full_name:
-        return jsonify({"error": "Full name, email, and password are required."}), 400
+        return jsonify({
+            "error": "Full name, email, and password are required."
+        }), 400
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({"error": "An account with this email already exists."}), 409
+    existing_user = User.query.filter_by(email=email).first()
+
+    if existing_user:
+        return jsonify({
+            "success": False,
+            "error": "This email is already registered. Please sign in."
+        }), 409
 
     # Default citizens, or staff/admin if requested for test environment
     user = User(
