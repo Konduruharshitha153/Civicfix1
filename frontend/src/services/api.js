@@ -24,14 +24,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // If unauthorized, clear stale credentials if token was invalid
-      if (localStorage.getItem('civicfix_token')) {
-        localStorage.removeItem('civicfix_token');
-        localStorage.removeItem('civicfix_user');
+      localStorage.removeItem('civicfix_token');
+      localStorage.removeItem('civicfix_user');
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
       }
     }
+
     return Promise.reject(error);
   }
 );
-
-export default api;
