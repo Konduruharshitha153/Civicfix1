@@ -3,8 +3,24 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from app.extensions import db
 from app.models.user import User
 from app.models.department import Department
+import re
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
+def validate_password(password):
+
+    if len(password) < 8:
+        return "Password must be at least 8 characters long"
+
+    if not re.search(r"[A-Z]", password):
+        return "Password must contain at least one uppercase letter"
+
+    if not re.search(r"[a-z]", password):
+        return "Password must contain at least one lowercase letter"
+
+    if not re.search(r"\d", password):
+        return "Password must contain at least one number"
+
+    return None
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
@@ -17,6 +33,12 @@ def register():
 
     if not email or not password or not full_name:
         return jsonify({"error": "Full name, email, and password are required."}), 400
+    password_error = validate_password(password)
+
+   if password_error:
+       return jsonify({
+        "error": password_error
+    }), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "An account with this email already exists."}), 409
