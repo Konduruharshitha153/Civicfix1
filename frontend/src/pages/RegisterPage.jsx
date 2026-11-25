@@ -13,6 +13,14 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const hasLength = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+
+const isStrongPassword =
+  hasLength &&
+  hasUpper &&
+  hasNumber;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,17 +116,34 @@ export default function RegisterPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 6 characters"
+            placeholder="Min 8 chars, 1 uppercase, 1 number"
             required
-            minLength={6}
+            minLength={8}
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
           />
+          <div className="mt-2 text-xs space-y-1">
+           <p className={hasLength ? "text-green-600" : "text-red-500"}>
+             ✓ At least 8 characters
+           </p>
+
+           <p className={hasUpper ? "text-green-600" : "text-red-500"}>
+              ✓ One uppercase letter (A-Z)
+           </p>
+
+           <p className={hasNumber ? "text-green-600" : "text-red-500"}>
+               ✓ One number (0-9)
+               </p>
+        </div>
         </div>
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+          disabled={loading || !isStrongPassword}
+          className={`w-full py-3 rounded-xl text-xs font-bold shadow-sm transition-colors ${
+                loading || !isStrongPassword
+                ? "bg-gray-400 cursor-not-allowed text-white"
+               : "bg-emerald-600 hover:bg-emerald-700 text-white"
+           }`}
         >
           {loading ? 'Creating Account...' : 'Register as Citizen'}
         </button>
